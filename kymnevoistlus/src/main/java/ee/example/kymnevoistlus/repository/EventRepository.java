@@ -1,14 +1,7 @@
-package ee.example.kymnevoistlus;
+package ee.example.kymnevoistlus.repository;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import ee.example.kymnevoistlus.entity.Event;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@SpringBootApplication
-public class KymnevoistlusApplication {
-
-    public static void main(String[] args) {
-        // System.out.println("||||||||||||");
-        SpringApplication.run(KymnevoistlusApplication.class, args);
-    }
-
+public interface EventRepository extends JpaRepository<Event, Long> {
 }
