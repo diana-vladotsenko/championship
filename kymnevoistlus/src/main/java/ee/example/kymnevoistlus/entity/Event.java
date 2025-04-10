@@ -13,10 +13,9 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Double result;
-
     @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;
+
 }

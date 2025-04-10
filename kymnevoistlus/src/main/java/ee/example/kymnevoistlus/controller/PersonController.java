@@ -4,11 +4,14 @@ import ee.example.kymnevoistlus.entity.Person;
 import ee.example.kymnevoistlus.repository.PersonRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/persons")
 public class PersonController {
     @Autowired
@@ -80,4 +83,18 @@ public class PersonController {
 
     return personRepository.save(person);
     }
+
+    @GetMapping("/countries")
+    public List<String> getAllCountries() {
+        return personRepository.findDistinctCountries();
+    }
+
+    @GetMapping("/persons-countries")
+    public Page<Person> findByCountry(@RequestParam String country, Pageable pageable) {
+        if (country.equalsIgnoreCase("ALL")) {
+            return personRepository.findAll(pageable);
+        }
+        return personRepository.findByCountry(country, pageable);
+    }
+
 }
