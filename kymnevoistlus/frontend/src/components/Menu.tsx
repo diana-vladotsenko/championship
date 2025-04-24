@@ -15,10 +15,13 @@ function Menu() {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto ps-2">
                         <Nav.Link as={Link} to="/people" className="text-dark">
-                            Sportlased
+                            Athletes
                         </Nav.Link>
                         <Nav.Link as={Link} to="/events" className="text-dark">
-                            Võistlused
+                            Events
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="/addPerson" className="text-dark">
+                            Add New Athlete
                         </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>

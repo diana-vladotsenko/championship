@@ -24,7 +24,9 @@ public class PersonController {
 
     @PostMapping
     public Person addPerson(@RequestBody Person person) {
-        person.setTotalResult(0.0); // Setting it to 0.00 when prevent it to be NULL 
+        if (person.getTotalResult() == null) {
+            person.setTotalResult(0.0);
+        }
         return personRepository.save(person);
     }
 

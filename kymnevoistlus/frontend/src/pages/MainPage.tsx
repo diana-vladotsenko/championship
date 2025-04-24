@@ -10,19 +10,16 @@ function MainPage() {
 
   const personsPerPage = 3;
 
-  // Fetch list of distinct countries
   useEffect(() => {
     fetch("http://localhost:8080/persons/countries")
       .then(res => res.json())
       .then(data => setCountries(data));
   }, []);
 
-  // Initial fetch of all persons
   useEffect(() => {
     fetchPersonsByCountry("ALL", 0);
   }, []);
 
-  // Fetch persons filtered by country & page
   function fetchPersonsByCountry(country: string, currentPage: number) {
     setActiveCountry(country);
     setPage(currentPage);
