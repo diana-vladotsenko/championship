@@ -1,11 +1,14 @@
 package ee.example.kymnevoistlus.controller;
 
+import ee.example.kymnevoistlus.entity.Event;
 import ee.example.kymnevoistlus.entity.Person;
+import ee.example.kymnevoistlus.repository.EventRepository;
 import ee.example.kymnevoistlus.repository.PersonRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +16,14 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/persons")
+@Transactional
 public class PersonController {
     @Autowired
     PersonRepository personRepository;
+
+    @Autowired
+    EventRepository eventRepository;
+
 
     @GetMapping
     public List<Person> getAllPersons() {
@@ -41,6 +49,7 @@ public class PersonController {
         if (!personRepository.existsById(id)) {
             throw new RuntimeException("ERROR_PERSON_IS_NOT_FOUND");
         } else {
+            eventRepository.deleteByPersonId(id);
             personRepository.deleteById(id);
             return personRepository.findAll();
         }
@@ -50,19 +59,34 @@ public class PersonController {
     public Person updatePerson(@PathVariable Long id, @RequestBody Person updatedPerson) {
         Person person = personRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("ERROR_PERSON_IS_NOT_FOUND"));
-        if (updatedPerson.getName() != null) {
+        if (updatedPerson.getName() == null) {
             throw new RuntimeException("ERROR_NAME_IS_MISSING");
         }
-        if (updatedPerson.getCountry() != null) {
+        if (updatedPerson.getCountry() == null) {
             throw new RuntimeException("ERROR_COUNTRY_IS_MISSING");
         }
         if (updatedPerson.getAge() < 18) {
             throw new RuntimeException("ERROR_AGE_IS_NOT_ALLOWED");
         }
-        return personRepository.save(person);    
+
+        person.setName(updatedPerson.getName());
+        person.setCountry(updatedPerson.getCountry());
+        person.setAge(updatedPerson.getAge());
+        person.setTotalResult(updatedPerson.getTotalResult());
+
+        Person savedPerson = personRepository.save(person);
+
+        List<Event> events = eventRepository.findByPersonId(id);
+        for (Event event : events) {
+            event.setResult(updatedPerson.getTotalResult());
+        }
+        eventRepository.saveAll(events);
+
+        return savedPerson;
+
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/patchPerson/{id}")
     public Person partialUpdatePerson(@PathVariable Long id, @RequestBody Person updatedPerson) {
         Person person = personRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("ERROR_PERSON_IS_NOT_FOUND"));

@@ -1,18 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import { Person } from "../models/Person";
 import { ToastContainer, toast } from 'react-toastify';
+import { Link } from "react-router-dom";
 
 function ManagePerson() {
-
   const [persons, setPersons] = useState<Person[]>([]);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const countryRef = useRef<HTMLInputElement>(null);
+  const ageRef = useRef<HTMLInputElement>(null);
+  const resultRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch("http://localhost:8080/persons")
       .then(res => res.json())
       .then(json => setPersons(json));
   }, []);
-
-
 
   const deletePerson = (id: number) => {
     fetch(`http://localhost:8080/persons/${id}`, {
@@ -29,12 +31,6 @@ function ManagePerson() {
         }
       });
   };
-
-
-  const nameRef = useRef<HTMLInputElement>(null);
-  const countryRef = useRef<HTMLInputElement>(null);
-  const ageRef = useRef<HTMLInputElement>(null);
-  const resultRef = useRef<HTMLInputElement>(null);
 
   const addPerson = () => {
     const newPerson = {
@@ -54,9 +50,22 @@ function ManagePerson() {
       .then(json => {
         if (json.message === undefined && json.timestamp === undefined && json.status === undefined) {
           toast.success("Athlete added successfully!");
+          const newEvent = {
+            person: json,
+            result: newPerson.totalResult
+          };
+
+          fetch("http://localhost:8080/events", {
+            method: "POST",
+            body: JSON.stringify(newEvent),
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+
           fetch("http://localhost:8080/persons")
             .then(res => res.json())
-            .then(data => setPersons(data));
+            .then(json => setPersons(json));
 
           if (nameRef.current && countryRef.current && ageRef.current && resultRef.current) {
             nameRef.current.value = "";
@@ -84,8 +93,8 @@ function ManagePerson() {
       <label>Result</label> <br />
       <input ref={resultRef} type="number" /> <br />
       <button onClick={() => addPerson()} style={{ marginTop: "20px" }}>Add</button>
-      
-      
+
+
       <table style={{ width: "800px", border: "1px solid black", marginTop: "60px" }}>
         <thead style={{ border: "1px solid black" }}>
           <   tr>
@@ -107,6 +116,11 @@ function ManagePerson() {
               <td>{person.totalResult}</td>
               <td>
                 <button onClick={() => deletePerson(person.id)}>Delete</button>
+              </td>
+              <td>
+                <Link to={"/editPerson/" + person.id}>
+                  <button>Edit</button>
+                </Link>
               </td>
             </tr>
           ))}
