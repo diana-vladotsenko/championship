@@ -23,6 +23,9 @@ function Menu() {
                         <Nav.Link as={Link} to="/addPerson" className="text-dark">
                             Add New Athlete
                         </Nav.Link>
+                        <Nav.Link as={Link} to="/map" className="text-dark">
+                            Map
+                        </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

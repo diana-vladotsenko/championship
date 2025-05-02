@@ -15,7 +15,7 @@ function MainPage() {
   useEffect(() => {
     fetch("http://localhost:8080/persons/countries")
       .then(res => res.json())
-      .then(data => setCountries(data));
+      .then(json => setCountries(json));
   }, []);
 
   useEffect(() => {
@@ -28,9 +28,9 @@ function MainPage() {
 
     fetch(`http://localhost:8080/persons/persons-countries?country=${country}&size=${personsPerPage}&page=${currentPage}&sort=${sort}`)
       .then(res => res.json())
-      .then(data => {
-        setPersons(data.content);
-        setTotalPersons(data.totalElements);
+      .then(json => {
+        setPersons(json.content);
+        setTotalPersons(json.totalElements);
       });
   }
 
