@@ -44,8 +44,8 @@ function MainPage() {
       <h6>Total Persons: {totalPersons}</h6>
       <div style={{ marginTop: "20px", marginBottom: "20px" }}>
         <h3>Sort By</h3>
-        <button onClick={() => setSort("id,asc")}>The Newest</button>
-        <button onClick={() => setSort("id,desc")}>The oldest</button>
+        <button onClick={() => setSort("id,asc")}>The Oldest</button>
+        <button onClick={() => setSort("id,desc")}>The Newest</button>
         <button onClick={() => setSort("name,asc")}>A-Z</button>
         <button onClick={() => setSort("name,desc")}>Z-A</button>
       </div>

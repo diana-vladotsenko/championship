@@ -58,7 +58,7 @@ public class PersonController {
     @PutMapping("/{id}")
     public Person updatePerson(@PathVariable Long id, @RequestBody Person updatedPerson) {
         Person person = personRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("ERROR_PERSON_IS_NOT_FOUND"));
+                .orElseThrow(() -> new RuntimeException("ERROR_PERSON_IS_NOT_FOUND"));
         if (updatedPerson.getName() == null) {
             throw new RuntimeException("ERROR_NAME_IS_MISSING");
         }
